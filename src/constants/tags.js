@@ -10,3 +10,5 @@ export const TAGS = [
   'Important',
   'Todo'
 ];
+
+export default TAGS;
