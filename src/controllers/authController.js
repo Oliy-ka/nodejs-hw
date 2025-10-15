@@ -48,7 +48,7 @@ export const loginUser = async (req, res, next) => {
   res.status(200).json(user);
 };
 
-export const logouttUser = async (req, res, next) => {
+export const logoutUser = async (req, res, next) => {
   const { sessionId } = req.cookies;
   if (sessionId) {
     await Session.deleteOne({ _id: sessionId });
