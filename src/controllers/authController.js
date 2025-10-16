@@ -7,6 +7,10 @@ import { createSession, setSessionCookies } from '../services/auth.js';
 export const registerUser = async (req, res, next) => {
   const { email, password } = req.body;
 
+  if (!email || !password) {
+    return next(createHttpError(400, 'Required fields are not filled in'));
+  }
+
   const existingUser = await User.findOne({ email });
   if (existingUser) {
     return next(createHttpError(400, 'Email in use'));
@@ -31,7 +35,7 @@ export const loginUser = async (req, res, next) => {
 
   const user = await User.findOne({ email });
   if (!user) {
-    return next(createHttpError(401, 'User not found'));
+    return next(createHttpError(401, 'Invalid credentials'));
   };
 
   const isValidPassword = await bcrypt.compare(password, user.password);
@@ -74,7 +78,7 @@ export const refreshUserSession = async (req, res, next) => {
   const isSessionTokenExpired =
     new Date() > new Date(session.refreshTokenValidUntil);
 
-  if (!isSessionTokenExpired) {
+  if (isSessionTokenExpired) {
     return next(createHttpError(401, 'Session token expired'));
   };
 
